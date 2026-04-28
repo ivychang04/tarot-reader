@@ -19,7 +19,7 @@ export interface DrawnCard extends TarotCard {
 /** Chat message for the reading/chat UI */
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'model';
+  role: 'user' | 'assistant';
   content: string;
   timestamp: number;
 }

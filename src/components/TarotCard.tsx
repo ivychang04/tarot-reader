@@ -60,7 +60,7 @@ export default function TarotCard({
           <img
             src={CARD_BACK_URL}
             alt="Tarot card face-down"
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-contain rounded-lg bg-gray-900"
             draggable={false}
           />
         </div>
@@ -70,7 +70,7 @@ export default function TarotCard({
           <img
             src={card.imageUrl}
             alt={card.name}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-contain rounded-lg bg-gray-900"
             draggable={false}
           />
         </div>

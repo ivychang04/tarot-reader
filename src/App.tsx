@@ -3,6 +3,7 @@ import type { AppScreen, DrawnCard } from './types/tarot';
 import StarField from './components/StarField';
 import WelcomeScreen from './screens/WelcomeScreen';
 import SelectionScreen from './screens/SelectionScreen';
+import ReadingScreen from './screens/ReadingScreen';
 
 function App() {
   const [screen, setScreen] = useState<AppScreen>('WELCOME');
@@ -46,19 +47,11 @@ function App() {
       )}
 
       {screen === 'READING' && (
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <p className="text-gray-400">
-            Reading screen — Phase 5
-            {/* selectedCards: {selectedCards.length}, question: {userQuestion} */}
-          </p>
-          <button
-            type="button"
-            onClick={handleNewReading}
-            className="ml-4 text-purple-400 underline"
-          >
-            New Reading
-          </button>
-        </div>
+        <ReadingScreen
+          question={userQuestion}
+          cards={selectedCards}
+          onNewReading={handleNewReading}
+        />
       )}
     </div>
   );

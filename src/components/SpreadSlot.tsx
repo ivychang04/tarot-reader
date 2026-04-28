@@ -45,7 +45,7 @@ export default function SpreadSlot({ position, card, index }: SpreadSlotProps) {
         <img
           src={card.imageUrl}
           alt={`${card.name} - ${card.isReversed ? 'Reversed' : 'Upright'}`}
-          className={`w-full h-full object-cover ${
+          className={`w-full h-full object-contain bg-gray-900 ${
             card.isReversed ? 'rotate-180' : ''
           }`}
         />
