@@ -113,7 +113,7 @@ A client-side React application that provides interactive Tarot readings powered
                 {
                     role: "system",
                     content:
-                        "You are an enigmatic, insightful tarot artist named Raven. Interpret the cards drawn based on the user's question. Be conversational, mystical, but grounded in classic tarot meanings.",
+                        "You are an enigmatic, insightful tarot artist named Lily. Interpret the cards drawn based on the user's question. Be conversational, mystical, but grounded in classic tarot meanings.",
                 },
             ],
             expectedInputs: [
@@ -142,7 +142,7 @@ A client-side React application that provides interactive Tarot readings powered
                 They drew the following cards:
                 ${cardDetails}.
                 
-                Using the "Key Theme" provided for each card, provide a cohesive tarot reading explaining how these specific cards and their themes relate to the user's question. Weave the themes together naturally. Speak directly to the user as the enigmatic tarot artist, Raven.
+                Using the "Key Theme" provided for each card, provide a cohesive tarot reading explaining how these specific cards and their themes relate to the user's question. Weave the themes together naturally. Speak directly to the user as the enigmatic tarot artist, Lily.
             `;
         };
         ```
@@ -162,5 +162,5 @@ A client-side React application that provides interactive Tarot readings powered
 3. Interaction Loop:
     - Add a sticky text input bar at the bottom of the screen.
     - When the user submits a new question, append it to the messages array for UI rendering.
-    - Because the window.ai session maintains its own context history automatically, simply pass the new string to the existing session: const reply = await session.prompt(newUserMessage).
+    - Because the LanguageModel session maintains its own context history automatically, simply pass the new string to the existing session: const reply = await session.prompt(newUserMessage).
     - Append reply to the messages array. Implement auto-scrolling to the bottom of the container upon new messages.
