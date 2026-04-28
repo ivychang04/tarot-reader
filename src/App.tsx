@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { AppScreen, DrawnCard } from './types/tarot';
 import StarField from './components/StarField';
 import WelcomeScreen from './screens/WelcomeScreen';
+import SelectionScreen from './screens/SelectionScreen';
 
 function App() {
   const [screen, setScreen] = useState<AppScreen>('WELCOME');
@@ -16,6 +17,10 @@ function App() {
   function handleCardsSelected(cards: DrawnCard[]) {
     setSelectedCards(cards);
     setScreen('READING');
+  }
+
+  function handleBackToWelcome() {
+    setScreen('WELCOME');
   }
 
   function handleNewReading() {
@@ -33,19 +38,18 @@ function App() {
       )}
 
       {screen === 'SELECTION' && (
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <p className="text-gray-400">
-            Selection screen — Phase 3
-            {/* Placeholder: userQuestion = {userQuestion} */}
-          </p>
-        </div>
+        <SelectionScreen
+          userQuestion={userQuestion}
+          onCardsSelected={handleCardsSelected}
+          onBack={handleBackToWelcome}
+        />
       )}
 
       {screen === 'READING' && (
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <p className="text-gray-400">
             Reading screen — Phase 5
-            {/* Placeholder: {selectedCards.length} cards, question = {userQuestion} */}
+            {/* selectedCards: {selectedCards.length}, question: {userQuestion} */}
           </p>
           <button
             type="button"
