@@ -1,47 +1,106 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Sparkles } from 'lucide-react';
 import QuestionInput from '../components/QuestionInput';
-import { checkAIAvailability } from '../utils/aiCheck';
+import { checkAIAvailability, downloadModel } from '../utils/aiCheck';
 
 interface WelcomeScreenProps {
   onSubmit: (question: string) => void;
 }
 
 /**
- * Landing screen: title, Lily introduction, question input, and AI status badge.
+ * Landing screen: title, Lily introduction, question input, and AI status badge
+ * with download progress tracking.
  */
 export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
   const [aiStatus, setAiStatus] = useState<string>('checking');
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
+
+  const startDownload = useCallback(() => {
+    setAiStatus('preparing');
+    setDownloadProgress(0);
+
+    downloadModel(
+      (percent) => {
+        setDownloadProgress(percent);
+      },
+      () => {
+        setAiStatus('available');
+        setDownloadProgress(100);
+      },
+      (errorMsg) => {
+        console.error('Download failed:', errorMsg);
+        setAiStatus('unavailable');
+      },
+    );
+  }, []);
 
   useEffect(() => {
     checkAIAvailability().then((result) => {
-      setAiStatus(result.status);
+      if (result.status === 'downloadable' || result.status === 'downloading') {
+        // Auto-trigger download and track progress
+        startDownload();
+      } else {
+        setAiStatus(result.status);
+      }
     });
-  }, []);
+  }, [startDownload]);
 
-  const statusLabel: Record<string, { text: string; color: string }> = {
-    checking: { text: 'Checking AI...', color: 'text-gray-500' },
-    available: { text: 'AI Ready', color: 'text-emerald-400' },
-    downloading: { text: 'AI Downloading...', color: 'text-amber-400' },
-    downloadable: { text: 'AI Available', color: 'text-blue-400' },
-    unavailable: { text: 'AI Unavailable', color: 'text-red-400/70' },
-  };
+  // Determine badge display
+  function getBadge(): { text: string; color: string; dotClass: string } {
+    switch (aiStatus) {
+      case 'checking':
+        return {
+          text: 'Checking AI...',
+          color: 'text-gray-500',
+          dotClass: 'bg-gray-400 animate-pulse',
+        };
+      case 'available':
+        return {
+          text: 'AI Ready',
+          color: 'text-emerald-400',
+          dotClass: 'bg-emerald-400 animate-pulse',
+        };
+      case 'preparing':
+        return {
+          text: `AI Preparing... ${downloadProgress}%`,
+          color: 'text-amber-400',
+          dotClass: 'bg-amber-400 animate-pulse',
+        };
+      case 'unavailable':
+      default:
+        return {
+          text: 'AI Unavailable',
+          color: 'text-red-400/70',
+          dotClass: 'bg-red-400',
+        };
+    }
+  }
 
-  const status = statusLabel[aiStatus] ?? statusLabel.unavailable;
+  const badge = getBadge();
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-12">
       {/* AI Status Badge */}
       <div className="absolute top-6 right-6 animate-fade-in">
-        <div className="flex items-center gap-2 glass-card rounded-full px-3 py-1.5">
-          <span className={`w-2 h-2 rounded-full ${
-            aiStatus === 'available' ? 'bg-emerald-400 animate-pulse' :
-            aiStatus === 'unavailable' ? 'bg-red-400' :
-            'bg-amber-400 animate-pulse'
-          }`} />
-          <span className={`text-xs font-medium ${status.color}`}>
-            {status.text}
-          </span>
+        <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-2 glass-card rounded-full px-3 py-1.5">
+            <span className={`w-2 h-2 rounded-full ${badge.dotClass}`} />
+            <span className={`text-xs font-medium ${badge.color}`}>
+              {badge.text}
+            </span>
+          </div>
+
+          {/* Download progress bar — shown during preparing state */}
+          {aiStatus === 'preparing' && (
+            <div className="w-full px-1 animate-fade-in">
+              <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${downloadProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { DrawnCard } from '../types/tarot';
+import { resolveAssetPath } from '../utils/assetPath';
 
 interface ReadingHeaderProps {
   cards: DrawnCard[];
@@ -42,7 +43,7 @@ export default function ReadingHeader({ cards, question }: ReadingHeaderProps) {
                 {/* Card thumbnail */}
                 <div className="relative w-14 h-20 sm:w-16 sm:h-24 rounded-lg overflow-hidden border border-purple-500/25 shadow-md">
                   <img
-                    src={card.imageUrl}
+                    src={resolveAssetPath(card.imageUrl)}
                     alt={`${card.name} - ${card.isReversed ? 'Reversed' : 'Upright'}`}
                     className={`w-full h-full object-contain bg-gray-900 ${
                       card.isReversed ? 'rotate-180' : ''

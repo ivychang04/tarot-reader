@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { TarotCard as TarotCardType } from '../types/tarot';
+import { resolveAssetPath } from '../utils/assetPath';
 
 interface TarotCardProps {
   card: TarotCardType;
@@ -8,7 +9,7 @@ interface TarotCardProps {
   isDisabled: boolean;
 }
 
-const CARD_BACK_URL = '/cards/card-back.jpg';
+const CARD_BACK_URL = resolveAssetPath('/cards/card-back.jpg');
 
 /**
  * Individual clickable card in the deck grid.
@@ -68,7 +69,7 @@ export default function TarotCard({
         {/* Back: Card Face (shown after flip) */}
         <div className="card-flip-back w-full h-full">
           <img
-            src={card.imageUrl}
+            src={resolveAssetPath(card.imageUrl)}
             alt={card.name}
             className="w-full h-full object-contain rounded-lg bg-gray-900"
             draggable={false}

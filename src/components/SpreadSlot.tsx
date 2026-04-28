@@ -1,4 +1,5 @@
 import type { DrawnCard } from '../types/tarot';
+import { resolveAssetPath } from '../utils/assetPath';
 
 interface SpreadSlotProps {
   position: 'Past' | 'Present' | 'Future';
@@ -43,7 +44,7 @@ export default function SpreadSlot({ position, card, index }: SpreadSlotProps) {
       {/* Card Image */}
       <div className="relative w-28 h-44 sm:w-32 sm:h-48 rounded-xl overflow-hidden border-2 border-purple-500/40 shadow-lg shadow-purple-500/10">
         <img
-          src={card.imageUrl}
+          src={resolveAssetPath(card.imageUrl)}
           alt={`${card.name} - ${card.isReversed ? 'Reversed' : 'Upright'}`}
           className={`w-full h-full object-contain bg-gray-900 ${
             card.isReversed ? 'rotate-180' : ''
