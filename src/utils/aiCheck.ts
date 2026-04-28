@@ -12,6 +12,7 @@ export async function checkAIAvailability(): Promise<{
 
   try {
     const availability = await LanguageModel.availability();
+    console.log(availability);
     return {
       available: availability !== 'unavailable',
       status: availability,
