@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Download } from 'lucide-react';
 import QuestionInput from '../components/QuestionInput';
 import { checkAIAvailability, downloadModel } from '../utils/aiCheck';
 
@@ -9,11 +9,17 @@ interface WelcomeScreenProps {
 
 /**
  * Landing screen: title, Lily introduction, question input, and AI status badge
- * with download progress tracking.
+ * with optional download trigger and progress tracking.
  */
 export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
   const [aiStatus, setAiStatus] = useState<string>('checking');
   const [downloadProgress, setDownloadProgress] = useState<number>(0);
+
+  useEffect(() => {
+    checkAIAvailability().then((result) => {
+      setAiStatus(result.status);
+    });
+  }, []);
 
   const startDownload = useCallback(() => {
     setAiStatus('preparing');
@@ -34,17 +40,6 @@ export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
     );
   }, []);
 
-  useEffect(() => {
-    checkAIAvailability().then((result) => {
-      if (result.status === 'downloadable' || result.status === 'downloading') {
-        // Auto-trigger download and track progress
-        startDownload();
-      } else {
-        setAiStatus(result.status);
-      }
-    });
-  }, [startDownload]);
-
   // Determine badge display
   function getBadge(): { text: string; color: string; dotClass: string } {
     switch (aiStatus) {
@@ -60,6 +55,13 @@ export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
           color: 'text-emerald-400',
           dotClass: 'bg-emerald-400 animate-pulse',
         };
+      case 'downloadable':
+        return {
+          text: 'AI Available — Download Required',
+          color: 'text-blue-400',
+          dotClass: 'bg-blue-400 animate-pulse',
+        };
+      case 'downloading':
       case 'preparing':
         return {
           text: `AI Preparing... ${downloadProgress}%`,
@@ -88,10 +90,22 @@ export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
             <span className={`text-xs font-medium ${badge.color}`}>
               {badge.text}
             </span>
+
+            {/* Download button — only shown when downloadable */}
+            {aiStatus === 'downloadable' && (
+              <button
+                type="button"
+                onClick={startDownload}
+                aria-label="Download AI model"
+                className="ml-1 p-1 rounded-md bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
-          {/* Download progress bar — shown during preparing state */}
-          {aiStatus === 'preparing' && (
+          {/* Download progress bar — shown during preparing/downloading state */}
+          {(aiStatus === 'preparing' || aiStatus === 'downloading') && (
             <div className="w-full px-1 animate-fade-in">
               <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
                 <div
