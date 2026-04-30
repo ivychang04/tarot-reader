@@ -130,7 +130,7 @@ export default function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
         {/* Title */}
         <div className="text-center space-y-3">
           <h1 className="text-5xl sm:text-6xl font-bold tracking-tight animate-shimmer">
-            Tarotap
+            TarotTale
           </h1>
           <p className="text-gray-400 text-lg sm:text-xl font-light leading-relaxed max-w-md mx-auto">
             Ask your question. Draw your cards.

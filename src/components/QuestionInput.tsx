@@ -5,7 +5,7 @@ interface QuestionInputProps {
   disabled?: boolean;
 }
 
-const MAX_CHARS = 300;
+const MAX_CHARS = 1000;
 
 /**
  * Controlled textarea for the user's tarot question.
